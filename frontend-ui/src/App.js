@@ -57,13 +57,13 @@ function CSVLinePlot() {
         
         const labels = result.data.map((item) => item[0]).slice(1); // data in first column
         const datasets = [];
-        const seriesNames = result.data[0].slice(1); // z,y,x
+        const seriesNames = result.data[0].slice(2); // z,y,x
 
         console.log("seriesNames:", seriesNames);
 
         const allData = {};
         seriesNames.forEach((name, index) => {
-          const data = result.data.map((row) => row[index + 1]).slice(1);
+          const data = result.data.map((row) => row[index + 2]).slice(1); // ignoring two colums for timestam and time elapsed
           allData[name] = data
           // console.log("name", name);
           // console.log("data", data);
