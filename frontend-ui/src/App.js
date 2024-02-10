@@ -16,7 +16,7 @@ import {
 import './App.css';
 
 import { tensor2d, loadLayersModel } from '@tensorflow/tfjs';
-import { normalizeValues, averageParts, customRound } from './util';
+import { normalizeValues, averageParts, customRound, dateTimeArray } from './util';
 
 ChartJS.register(
   CategoryScale,
@@ -55,7 +55,9 @@ function CSVLinePlot() {
         //   return (currentValue - baseValue).toFixed(2); // Adjust precision as needed
         // });
         
-        const labels = result.data.map((item) => item[0]).slice(1); // data in first column
+        //const labels = dateTimeArray(result.data.map((item) => item[0]).slice(1)); // data in first column
+        const labels = result.data.map((item) => item[1]).slice(1).map((sec) => Math.trunc(sec));
+
         const datasets = [];
         const seriesNames = result.data[0].slice(2); // z,y,x
 
@@ -65,10 +67,8 @@ function CSVLinePlot() {
         seriesNames.forEach((name, index) => {
           const data = result.data.map((row) => row[index + 2]).slice(1); // ignoring two colums for timestam and time elapsed
           allData[name] = data
-          // console.log("name", name);
-          // console.log("data", data);
           datasets.push({
-            label: name,
+            label: `${name}-Axis`,
             data: data,
             fill: false,
             borderColor: `hsl(${(index * 360) / seriesNames.length}, 100%, 50%)`,

@@ -11,7 +11,17 @@ function CSVLineChart({ chartData }) {
           scales: {
             y: {
               beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Data (How much have you moved)'
+              }
             },
+            x: { // 'x' specifies the x-axis
+              title: {
+                  display: true,
+                  text: 'Seconds' // Label for the x-axis
+              }
+          },
           },
         }}
       />
