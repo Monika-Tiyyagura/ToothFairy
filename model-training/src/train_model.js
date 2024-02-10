@@ -1,75 +1,84 @@
-const fs = require('fs');
-const Papa = require('papaparse');
-
 const tf = require('@tensorflow/tfjs-node');
+const Papa = require('papaparse');
+const fs = require('fs');
+const path = require('path');
 
-// Assuming you have a function to load and preprocess each CSV file
+// Function to asynchronously read and parse a CSV file
+const readCSV = async (filePath) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, csvString) => {
+      if (err) {
+        reject(err);
+      } else {
+        Papa.parse(csvString, {
+          complete: (results) => resolve(results.data),
+          header: true,
+          dynamicTyping: true,
+          skipEmptyLines: true,
+          error: reject
+        });
+      }
+    });
+  });
+};
 
-// Load and preprocess all files
-const datasets = [];
-const ranks = [];
-const data = loadDataAndProcess(); // Replace with your loading function
-datasets.push(data.features);
-ranks.push(data.rank);
+// Function to load and prepare data from multiple CSV files, each in its ranked directory
+const loadDataAndLabels = async (baseDir, ranks) => {
+  let features = [];
+  let labels = [];
 
-console.log("data sets loaded!");
-// console.log('datasets:', datasets)
-// Combine features and ranks into a single dataset
-const combinedData = tf.concat(...datasets, 0); // Concatenate along axis 0 (rows)
-console.log("Concat data complete");
-const rankLabels = tf.tensor(ranks); // Convert ranks to int32 tensors
+  for (const rank of ranks) {
+    const dirPath = path.join(baseDir, rank.toString());
+    const files = fs.readdirSync(dirPath).filter(file => file.endsWith('.csv'));
 
-
-
-// Build and train your model (adapt based on your choice)
-const model = tf.sequential();
-console.log("Combined shape:", combinedData.shape);
-// Example with MLP:
-model.add(tf.layers.dense({units:64, activation: 'relu', inputShape: [1, 9]} ));
-console.log("second started");
-model.add(tf.layers.dense({units:10, activation: 'linear'})); // 1 output for predicted rank
-
-console.log("model added!");
-model.compile({
-  optimizer: 'adam',
-  loss: 'meanSquaredError', // or other ranking loss function
-  metrics: ['mae']
-});
-console.log("model compiled!");
-// console.log(rankLabels);
-console.log(combinedData.transpose().dataSync);
-const response = model.fit(combinedData.transpose().dataSync(), rankLabels, {
-  epochs: 100, // adjust based on complexity and dataset size
-  verbose: 1
-
-});
-
-// Use the model for prediction
-// const newPoint = tf.tensor([/* features from a new data point */]);
-// const prediction = model.predict(tf.expandDims(newPoint, 0));
-// console.log('Predicted rank:', prediction.dataSync()[0][0]);
-
-function loadDataAndProcess() {
-  // Load data from CSV file
-
-  // console.log('loading data');
-  const csvData = fs.readFileSync('src/Accelerometer.csv', 'utf8');
-  const parsedData = Papa.parse(csvData, { header: true });
-  // console.log(' read data file.', parsedData);
-  // Assuming data points are in the first 3 columns
-
-  const features = parsedData.data.map(record => {
-    // console.log("parsing row", record);
-    return tf.tensor([parseFloat(record['x']), parseFloat(record['y']), parseFloat(record['z'])])
+    for (const file of files) {
+      const filePath = path.join(dirPath, file);
+      const data = await readCSV(filePath);
+      // Flatten data and append to features
+      features = features.concat(data.map(d => [d.x, d.y, d.z]));
+      // Append rank as label for each data point in the file
+      labels = labels.concat(new Array(data.length).fill(parseInt(rank)));
+    }
   }
-);
-  // console.log("features" , features);
-  // Generate random rank between 1 and 10
-  const rank = Math.floor(Math.random() * 10) + 1;
 
   return {
-    features: features,
-    rank: rank
+    features: tf.tensor2d(features),
+    labels: tf.tensor1d(labels)
   };
-}
+};
 
+// Define the model (same as before)
+const createModel = () => {
+  const model = tf.sequential();
+  model.add(tf.layers.dense({inputShape: [3], units: 64, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 1}));
+  model.compile({
+    optimizer: 'adam',
+    loss: 'meanSquaredError',
+    metrics: ['mse'],
+  });
+  return model;
+};
+
+// Train the model with data from multiple CSV files
+const trainModel = async (baseDir, ranks) => {
+  const { features, labels } = await loadDataAndLabels(baseDir, ranks);
+  const model = createModel();
+
+  await model.fit(features, labels, {
+    epochs: 10,
+    validationSplit: 0.2,
+  });
+
+  console.log('Training complete');
+
+  // Save the model to the file system
+  const savePath = 'file://./model.json';
+  await model.save(savePath);
+  console.log(`Model saved to ${savePath}`);
+};
+
+// Example usage
+const baseDir = 'src/data'; // Base directory containing ranked subdirectories
+const ranks = [1, 2, 3, 4, 5]; // Example ranks, adjust according to your dataset
+trainModel(baseDir, ranks).catch(console.error);
