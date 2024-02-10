@@ -16,7 +16,7 @@ import {
 import './App.css';
 
 import { tensor2d, loadLayersModel } from '@tensorflow/tfjs';
-import { normalizeValues, averageParts } from './util';
+import { normalizeValues, averageParts, customRound } from './util';
 
 ChartJS.register(
   CategoryScale,
@@ -85,18 +85,22 @@ function CSVLinePlot() {
 
           // console.log(prediction.then((result) => console.log(result)));
 
-          // Normalize predictions
-          const normalizedPredictions = normalizeValues([]);
+          
+          prediction.array().then(array => {
+            console.log("Prediction Array", array.flat());
+            // Normalize predictions
+
+
+            const flattenedPredictions = array.flat().filter(value => !Number.isNaN(value) );
+
+          const normalizedPredictions = normalizeValues(flattenedPredictions);
           // Average the normalized predictions by dividing into 8 parts
-          const averagedPredictions = averageParts([]);
+          const averagedPredictions = averageParts(normalizedPredictions);
           console.log("Normalized Predictions:", normalizedPredictions);
           console.log("Averaged Predictions:", averagedPredictions);
-
-        //   prediction.dataSync().then(array => {
-        //     console.log("Prediction:", array);
-        // });
-
-          setScore(prediction.rank);
+          const overAllScore = averagedPredictions.reduce((acc, curr) => acc + curr, 0) / averagedPredictions.length;
+          setScore(customRound(overAllScore));
+          })         
         }
 
 

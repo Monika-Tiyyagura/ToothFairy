@@ -73,7 +73,7 @@ const trainModel = async (baseDir, ranks) => {
   console.log('Training complete');
 
   // Save the model to the file system
-  const savePath = 'file://./model.json';
+  const savePath = 'file://./model';
   await model.save(savePath);
   console.log(`Model saved to ${savePath}`);
 };

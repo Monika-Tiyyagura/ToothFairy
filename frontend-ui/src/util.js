@@ -1,6 +1,8 @@
 export const normalizeValues = (values) => {
+    console.log("Type of input", typeof values[0])
     const max = Math.max(...values);
     const min = Math.min(...values);
+    console.log("max & min values", max, min);
     return values.map(value => ((value - min) / (max - min)) * 10);
 };
 
@@ -17,3 +19,7 @@ export const averageParts = (values) => {
 
     return averages;
 };
+
+export function customRound(number) {
+    return number - Math.floor(number) < 0.5 ? Math.floor(number) : Math.ceil(number);
+}
