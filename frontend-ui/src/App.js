@@ -94,12 +94,20 @@ function CSVLinePlot() {
             }}
           />
           {/* Display the score and message */}
-          <p>Score: {score}</p>
-          {score > 5 ? (
-            <p>You have done a very good job!</p>
-          ) : (
-            <p>Please visit the physician for guidance.</p>
-          )}
+          <div className="scoreContainer">
+            <p className="score">Score: {score}</p>
+            <p className="message">
+              {score > 5 ? (
+                <>
+                  Great job! 🌟 Keep it up!
+                </>
+              ) : (
+                <>
+                  Please consult a physician for guidance. 🩺
+                </>
+              )}
+            </p>
+          </div>
         </div>
       ) : null}
     </div>
