@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { Line } from 'react-chartjs-2';
+import CSVLineChart from './CSVLinechart';
+import ScoreDisplay from './scoreDisplay';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -27,8 +28,6 @@ ChartJS.register(
   Legend
 );
 
-
-
 function CSVLinePlot() {
   const [chartData, setChartData] = useState({});
   const [score, setScore] = useState(0); // State for the score
@@ -46,6 +45,7 @@ function CSVLinePlot() {
     const file = event.target.files[0];
     Papa.parse(file, {
       complete: (result) => {
+
         console.log(result.data[1][0])
         // const baseValue = parseFloat(result.data[1][0]); // Assuming the first value is the baseline
         // const labels = result.data.map((item, index) => {
@@ -72,7 +72,7 @@ function CSVLinePlot() {
             data: data,
             fill: false,
             borderColor: `hsl(${(index * 360) / seriesNames.length}, 100%, 50%)`,
-            tension: 0.1
+            tension: 0.1,
           });
         });
         console.log("alldata", allData);
@@ -98,6 +98,7 @@ function CSVLinePlot() {
 
           setScore(prediction.rank);
         }
+
 
         setChartData({
           labels: labels,
@@ -134,33 +135,10 @@ function CSVLinePlot() {
         />
       </label>
       {chartData.labels ? (
-        <div className="chartContainer">
-          <Line
-            data={chartData}
-            options={{
-              scales: {
-                y: {
-                  beginAtZero: true,
-                },
-              },
-            }}
-          />
-          {/* Display the score and message */}
-          <div className="scoreContainer">
-            <p className="score">Score: {score}</p>
-            <p className="message">
-              {score > 5 ? (
-                <>
-                  Great job! 🌟 Keep it up!
-                </>
-              ) : (
-                <>
-                  Please consult a physician for guidance. 🩺
-                </>
-              )}
-            </p>
-          </div>
-        </div>
+        <>
+          <CSVLineChart chartData={chartData} />
+          <ScoreDisplay score={score} />
+        </>
       ) : null}
     </div>
   );

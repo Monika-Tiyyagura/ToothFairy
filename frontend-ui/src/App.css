@@ -1,33 +1,42 @@
+/* Body styles */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Container styles */
 .container {
   height: 100vh;
-  width: auto;
   overflow: hidden;
-  background-image: url('./backgroundpic.webp'); /* Replace with the correct path to your image or GIF */
-  background-size: 120vh;
+  background-image: url('./backgroundpic.webp');
+  background-size: cover;
   background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
 }
 
+/* Input styles */
 .input {
   margin-bottom: 20px;
 }
 
+/* Chart container styles */
 .chartContainer {
-  background-color: #ffffff; /* White background for the chart */
+  background-color: #ffffff;
   padding: 20px;
   border-radius: 8px;
   margin-top: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 80%; /* Adjust the width as needed */
+  max-width: 600px; /* Set a maximum width for responsiveness */
 }
 
+/* File upload button styles */
 .fileUploadContainer {
-  background-color: #007bff; /* Bootstrap primary button color */
+  background-color: #93c1f1;
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
@@ -38,17 +47,18 @@
 .fileUploadButton {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
+  background-color: #93c1f1;
+  color: black;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
 }
 
 .fileUploadButton:hover {
-  background-color: #0056b3;
+  background-color: #93c1f1;
 }
 
+/* File input styles */
 .fileInput {
   position: absolute;
   width: 100%;
@@ -58,18 +68,38 @@
   opacity: 0;
   cursor: pointer;
 }
-.scoreContainer {
-  margin-top: 10px;
+
+/* ScoreDisplay.css */
+.scoreCard {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
   text-align: center;
+  width: 80%; /* Adjust the width as needed */
+  max-width: 600px; /* Set a maximum width for responsiveness */
+}
+
+.scoreContainer {
+  margin: 0;
 }
 
 .score {
   font-size: 18px;
   font-weight: bold;
+  color: black;
 }
 
 .message {
   font-size: 16px;
   margin-top: 5px;
+  color: black;
 }
 
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .chartContainer {
+    width: 90%; /* Adjust the width for smaller screens */
+  }
+}
