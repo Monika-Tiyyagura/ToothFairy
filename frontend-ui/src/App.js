@@ -41,21 +41,13 @@ function CSVLinePlot() {
       setModel(loadedModel);
     };
     loadModel().catch(console.error);
+    document.title = "Tooth Fairy";
   }, []);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     Papa.parse(file, {
       complete: (result) => {
-
-        console.log(result.data[1][0])
-        // const baseValue = parseFloat(result.data[1][0]); // Assuming the first value is the baseline
-        // const labels = result.data.map((item, index) => {
-        //   // Convert each value to float, subtract the baseValue, and return the result
-        //   // This assumes the first column contains numerical values
-        //   const currentValue = parseFloat(item[0]);
-        //   return (currentValue - baseValue).toFixed(2); // Adjust precision as needed
-        // });
         
         //const labels = dateTimeArray(result.data.map((item) => item[0]).slice(1)); // data in first column
         const labels = result.data.map((item) => item[1]).slice(1).map((sec) => Math.trunc(sec));
@@ -125,8 +117,10 @@ function CSVLinePlot() {
 
   return (
     <div className="container">
+      <h1>Tooth Fairy - Analyze your brushing pattern</h1> {/* On-page title */}
+      <div>
       <label className="fileUploadContainer">
-        <span className="fileUploadButton">Choose File</span>
+        <span className="fileUploadButton"><strong>Upload File</strong></span>
         <input
           type="file"
           accept=".csv"
@@ -134,6 +128,7 @@ function CSVLinePlot() {
           className="fileInput"
         />
       </label>
+      </div>
       {chartData.labels ? (
         <>
           <CSVLineChart chartData={chartData} />

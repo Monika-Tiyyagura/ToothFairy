@@ -6,8 +6,9 @@ body {
 
 /* Container styles */
 .container {
-  height: 100vh;
-  overflow: hidden;
+  height: 100vh; /* Adjust if necessary */
+  overflow-y: auto; /* Enables vertical scrolling */
+  overflow-x: hidden; /* Prevents horizontal scrolling */
   background-image: url('./backgroundpic.webp');
   background-size: 120vh;
   background-position: center;
@@ -17,6 +18,13 @@ body {
   justify-content: center;
   font-family: 'Arial', sans-serif;
 }
+
+.container h1 {
+  color: black; 
+  background-color: #93c1f1;
+  font-family: 'Arial', sans-serif;
+}
+
 
 /* Input styles */
 .input {
@@ -34,14 +42,10 @@ body {
   max-width: 600px; /* Set a maximum width for responsiveness */
 }
 
-/* File upload button styles */
+/* Container for the file upload, should not affect the whole page */
 .fileUploadContainer {
-  background-color: #93c1f1;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: inline-block;
+  position: relative; /* Establishes a positioning context for absolute positioning inside */
+  display: inline-block; /* Restricts the container's size to its content */
 }
 
 .fileUploadButton {
@@ -54,11 +58,7 @@ body {
   font-size: 16px;
 }
 
-.fileUploadButton:hover {
-  background-color: #93c1f1;
-}
-
-/* File input styles */
+/* Ensures the file input occupies the same space as the button but remains invisible */
 .fileInput {
   position: absolute;
   width: 100%;
@@ -68,6 +68,7 @@ body {
   opacity: 0;
   cursor: pointer;
 }
+
 
 /* Highlights the score value */
 .highlight {
