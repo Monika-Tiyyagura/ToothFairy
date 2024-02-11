@@ -69,33 +69,67 @@ body {
   cursor: pointer;
 }
 
-/* ScoreDisplay.css */
+/* Highlights the score value */
+.highlight {
+  font-weight: bold;
+  color: #007bff; /* Example color - blue */
+}
+
+/* Highlights the prediction values */
+.predictionValue {
+  font-weight: bold;
+  color: #28a745; /* Example color - green */
+}
+
+/* Additional styling for context */
 .scoreCard {
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  margin-top: 20px;
-  text-align: center;
-  width: 80%; /* Adjust the width as needed */
-  max-width: 600px; /* Set a maximum width for responsiveness */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 20px;
+  font-family: 'Arial', sans-serif;
 }
 
 .scoreContainer {
-  margin: 0;
+  text-align: center;
 }
-
+/* Score styling */
 .score {
-  font-size: 18px;
-  font-weight: bold;
-  color: black;
+  font-size: 1.5rem; /* Increase the font size for better visibility */
+  color: black; /* A vibrant color to highlight the score */
+  margin: 1rem 0; /* Add some space around the score for better layout */
+  font-weight: bold; /* Ensure the font weight is bold for emphasis */
+  text-align: center; /* Center-align the score for prominence */
+  padding: 0.5rem 1rem; /* Padding for better spacing inside the score element */
+}
+.message {
+  font-size: 1.5rem;
+  color: black; /* Soft color for messages */
+  margin-bottom: 1rem;
+}
+.predictionsTableContainer {
+  margin-top: 20px;
 }
 
-.message {
-  font-size: 16px;
-  margin-top: 5px;
-  color: black;
+.predictionsTable {
+  width: 100%;
+  border-collapse: collapse;
 }
+
+.predictionsTable td, .predictionsTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.predictionsTable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
 
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {

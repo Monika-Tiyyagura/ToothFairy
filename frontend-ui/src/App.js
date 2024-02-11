@@ -32,6 +32,8 @@ function CSVLinePlot() {
   const [chartData, setChartData] = useState({});
   const [score, setScore] = useState(0); // State for the score
   const [model, setModel] = useState(null);
+  const [averagedPredictions, setAveragedPredictions] = useState([]);
+
 
   useEffect(() => {
     const loadModel = async () => {
@@ -87,20 +89,14 @@ function CSVLinePlot() {
 
           
           prediction.array().then(array => {
-            console.log("Prediction Array", array.flat());
-            // Normalize predictions
-
-
-            const flattenedPredictions = array.flat().filter(value => !Number.isNaN(value) );
-
-          const normalizedPredictions = normalizeValues(flattenedPredictions);
-          // Average the normalized predictions by dividing into 8 parts
-          const averagedPredictions = averageParts(normalizedPredictions);
-          console.log("Normalized Predictions:", normalizedPredictions);
-          console.log("Averaged Predictions:", averagedPredictions);
-          const overAllScore = averagedPredictions.reduce((acc, curr) => acc + curr, 0) / averagedPredictions.length;
-          setScore(customRound(overAllScore));
-          })         
+            const flattenedPredictions = array.flat().filter(value => !Number.isNaN(value));
+            const normalizedPredictions = normalizeValues(flattenedPredictions);
+            const averagedPredictions = averageParts(normalizedPredictions);
+            setAveragedPredictions(averagedPredictions); // Update the state here
+            const overAllScore = averagedPredictions.reduce((acc, curr) => acc + curr, 0) / averagedPredictions.length;
+            setScore(customRound(overAllScore));
+          });
+                   
         }
 
 
@@ -141,7 +137,8 @@ function CSVLinePlot() {
       {chartData.labels ? (
         <>
           <CSVLineChart chartData={chartData} />
-          <ScoreDisplay score={score} />
+          <ScoreDisplay score={score} averagePredictions={averagedPredictions} />
+
         </>
       ) : null}
     </div>
